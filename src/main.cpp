@@ -1,8 +1,15 @@
 #include <iostream>
-// #include <youtube_engine/engine.h>
+#include <engine/engine.h>
+#include <engine/service_locator.h>
+#include <glm/glm.hpp>
+// can't import cmake PRIVATE #include <GLFW/glfw3.h>
 
 int main(int argc, char **argv) {
     std::cout << "Hello world" << std::endl;
-    // YoutubeEngine::PrintHelloWorld();
+    MyEngine::Init();
+    ServiceLocator::GetWindow()->OpenWindow();
+    while(!ServiceLocator::GetWindow()->Update()) {
+
+    }
     return 0;
 }

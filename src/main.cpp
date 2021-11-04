@@ -1,15 +1,17 @@
-#include <iostream>
-#include <engine/engine.h>
-#include <engine/service_locator.h>
-#include <glm/glm.hpp>
-// can't import cmake PRIVATE #include <GLFW/glfw3.h>
+#include <engine/platform/entry_point.h>
+#include <engine/platform/game.h>
 
-int main(int argc, char **argv) {
-    std::cout << "Hello world" << std::endl;
-    MyEngine::Init();
-    ServiceLocator::GetWindow()->OpenWindow();
-    while(!ServiceLocator::GetWindow()->Update()) {
-
+class MyGame: public Game {
+public:
+    MyGame() : Game() {
+        std::cout << "MyGame inited" << std::endl;
     }
-    return 0;
+protected:
+    void Update(float deltaTime) override {
+        std::cout << "MyGame updated" << std::endl;
+    }
+};
+
+Game* CreateGame() {
+    return new MyGame();
 }

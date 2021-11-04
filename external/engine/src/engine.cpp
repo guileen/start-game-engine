@@ -7,5 +7,4 @@
 
 void MyEngine::Init() {
     std::cout << "Initializing window" << std::endl;
-    ServiceLocator::SetWindow(new CustomWindow());
 };

@@ -1,6 +1,7 @@
-#include "engine/platform/game.h"
-#include "engine/service_locator.h"
-#include "glfw_window.h"
+#include <engine/platform/game.h>
+#include <engine/service_locator.h>
+#include "platform/glfw_window.h"
+#include "rendering/vulkan/vulkan_renderer.h"
 #include <iostream>
 
 Game::Game(): Game("New Engine Game") { }
@@ -33,6 +34,10 @@ void Game::Run() {
 
 void Game::initializeServices() {
     ServiceLocator::Provide(new CustomWindow(m_windowTitle, 800, 600));
+    RendererSettings settings {
+        .ApplicationName = m_windowTitle,
+    };
+    ServiceLocator::Provide(new VulkanRenderer(), settings);
 }
 
 void Game::shutdownServices() {

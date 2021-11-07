@@ -6,9 +6,9 @@ layout (location = 0) out vec3 outColour;
 void main() {
     // const array of poistions for triangle
     const vec3 poistions[3] = vec3[3] (
-        vec3(-1.0, -1.0, 0.0),
-        vec3(1.0, -1.0, 0.0),
-        vec3(0.0, 1.0, 0.0)
+        vec3( 1.f,  1.f, 0.f),
+        vec3(-1.f,  1.f, 0.f),
+        vec3( 0.f, -1.f, 0.f)
     );
 
     const vec3 colour[3] = vec3[3] (

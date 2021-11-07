@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <engine/platform/window.h>
 #include <string>
+#include <input/glfw_input.h>
 
 class CustomWindow : public Window {
 public:
@@ -20,4 +21,7 @@ private:
     std::string _title;
     int _width;
     int _height;
+
+    std::unordered_map<InputKey, InputDeviceState> getGamepadState(int joystickId);
+    MultiplatformInput _input {};
 };

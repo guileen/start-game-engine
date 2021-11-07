@@ -2,6 +2,8 @@
 #include <engine/service_locator.h>
 #include "platform/glfw_window.h"
 #include "rendering/vulkan/vk_renderer.h"
+#include "input/glfw_input.h"
+
 #include <iostream>
 
 Game::Game(): Game("New Engine Game") { }
@@ -20,6 +22,11 @@ void Game::Run() {
         if(ServiceLocator::GetWindow()->ShouldClose())
         {
             m_isRunning = false;
+            continue;
+        }
+        
+        if (ServiceLocator::GetInputManager()) {
+            ServiceLocator::GetInputManager()->processInput();
         }
         // Update game state
         Update(0.0f);
@@ -33,8 +40,12 @@ void Game::Run() {
 }
 
 void Game::initializeServices() {
+    // provide input manager
+    ServiceLocator::Provide(new InputManager());
+    // provide window
     ServiceLocator::Provide(new CustomWindow(m_windowTitle, 800, 600));
     ServiceLocator::GetWindow()->OpenWindow();
+    // provide renderer
     RendererSettings settings {
         .ApplicationName = m_windowTitle,
     };

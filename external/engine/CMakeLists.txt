@@ -9,6 +9,8 @@ add_subdirectory(external/vk-bootstrap)
 
 find_package(Vulkan REQUIRED)
 
+message(STATUS "Found Vulkan" ${Vulkan_LIBRARIES})
+
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 
 add_library(${PROJECT_NAME} ${SOURCES})

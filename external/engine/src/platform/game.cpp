@@ -11,9 +11,6 @@ Game::Game(std::string windowTitle): m_windowTitle(std::move(windowTitle)) {
 }
 
 void Game::Run() {
-    // Open the window
-    ServiceLocator::GetWindow()->OpenWindow();
-
     std::cout << "Game running..." << m_isRunning << std::endl;
 
     // run the application
@@ -24,16 +21,20 @@ void Game::Run() {
         {
             m_isRunning = false;
         }
-        Update(0.0f);
         // Update game state
+        Update(0.0f);
 
         // Update physics
+
+        // Render
+        ServiceLocator::GetRenderer()->Render();
     }
     
 }
 
 void Game::initializeServices() {
     ServiceLocator::Provide(new CustomWindow(m_windowTitle, 800, 600));
+    ServiceLocator::GetWindow()->OpenWindow();
     RendererSettings settings {
         .ApplicationName = m_windowTitle,
     };

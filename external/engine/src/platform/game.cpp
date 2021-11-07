@@ -1,7 +1,7 @@
 #include <engine/platform/game.h>
 #include <engine/service_locator.h>
 #include "platform/glfw_window.h"
-#include "rendering/vulkan/vulkan_renderer.h"
+#include "rendering/vulkan/vk_renderer.h"
 #include <iostream>
 
 Game::Game(): Game("New Engine Game") { }

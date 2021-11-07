@@ -8,7 +8,7 @@ public:
     }
 protected:
     void Update(float deltaTime) override {
-        std::cout << "MyGame updated" << std::endl;
+        // std::cout << "MyGame updated" << std::endl;
     }
 };
 

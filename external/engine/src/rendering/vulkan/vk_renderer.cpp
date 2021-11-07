@@ -1,8 +1,11 @@
-#include "vulkan_renderer.h"
+#include "vk_renderer.h"
 #include <VkBootstrap.h>
 #include <unordered_map>
 #include <engine/service_locator.h>
 #include <iostream>
+#include "vk_initializer.h"
+#include "vk_utilities.h"
+#include "vk_pipeline_builder.h"
 
 void VulkanRenderer::Init(RendererSettings settings) {
     m_settings = settings;
@@ -19,10 +22,15 @@ void VulkanRenderer::Init(RendererSettings settings) {
     std::cout << "VulkanRenderer::Init() initCommandPool done" << std::endl;
     initSyncObjects();
     std::cout << "VulkanRenderer::Init() initSyncObjects done" << std::endl;
+    initPipeline();
+    std::cout << "VulkanRenderer::Init() initPipeline done" << std::endl;
 }
 
 void VulkanRenderer::Shutdown() {
     vkDeviceWaitIdle(m_device);
+
+    vkDestroyPipeline(m_device, m_triangle_pipeline, nullptr);
+    vkDestroyPipelineLayout(m_device, m_triangle_pipeline_layout, nullptr);
 
     vkDestroyFence(m_device, m_render_fence, nullptr);
     vkDestroySemaphore(m_device, m_present_semaphore, nullptr);
@@ -51,7 +59,7 @@ void VulkanRenderer::Render() {
     VK_CHECK(vkResetFences(m_device, 1, &m_render_fence));                     // 0
 
     uint32_t swapchainImageIndex;
-    VK_CHECK(vkAcquireNextImageKHR(m_device, m_swapchain, 1000000000, m_present_semaphore, nullptr, &swapchainImageIndex));
+    VK_CHECK(vkAcquireNextImageKHR(m_device, m_swapchain, 1000000000, m_present_semaphore, VK_NULL_HANDLE, &swapchainImageIndex));
 
     VK_CHECK(vkResetCommandBuffer(m_main_command_buffer, 0));
 
@@ -83,6 +91,8 @@ void VulkanRenderer::Render() {
     vkCmdBeginRenderPass(cmd, &renderPassBeginInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     // DRAW CALLS
+    vkCmdBindPipeline(cmd, VK_PIPELINE_BIND_POINT_GRAPHICS, m_triangle_pipeline);
+    vkCmdDraw(cmd, 3, 1, 0, 0);
 
     vkCmdEndRenderPass(cmd);
     VK_CHECK(vkEndCommandBuffer(cmd));
@@ -286,4 +296,61 @@ void VulkanRenderer::initSyncObjects() {
         throw std::runtime_error("Failed to create semaphore");
     }
 
+}
+
+void VulkanRenderer::initPipeline() {
+    VkShaderModule triangleFragShader;
+    if (!VulkanUtilities::LoadShaderModule("shaders/triangle.frag.spv", m_device, triangleFragShader)) {
+        std::cout << "Failed to load triangle fragment shader module\n";
+    }
+    else {
+        std::cout << "Successfully loaded triangle fragment shader module\n";
+    }
+
+    VkShaderModule triangleVertShader;
+    if (!VulkanUtilities::LoadShaderModule("shaders/triangle.vert.spv", m_device, triangleVertShader)) {
+        std::cout << "Failed to load triangle vertex shader module\n";
+    }
+    else {
+        std::cout << "Successfully loaded triangle vertex shader module\n";
+    }
+
+    auto pipelineLayoutInfo = PipelineLayoutCreateInfo();
+    VK_CHECK(vkCreatePipelineLayout(m_device, &pipelineLayoutInfo, nullptr, &m_triangle_pipeline_layout));
+
+    /*
+     * TEMPORARY PIPELINE BUILDING
+     */
+
+    VulkanPipelineBuilder pipelineBuilder;
+    pipelineBuilder._shaderStages.push_back(
+        PipelineShaderStageCreateInfo(VK_SHADER_STAGE_VERTEX_BIT, triangleVertShader));
+    pipelineBuilder._shaderStages.push_back(
+        PipelineShaderStageCreateInfo(VK_SHADER_STAGE_FRAGMENT_BIT, triangleFragShader));
+
+    pipelineBuilder._vertexInputInfo = PipelineVertexInputStateCreateInfo();
+    pipelineBuilder._inputAssembly = PipelineInputAssemblyStateCreateInfo(VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
+
+    // build the viewport
+    pipelineBuilder._viewport = {
+        .x = 0.f,
+        .y = 0.f,
+        .width = static_cast<float>(m_window_extent.width),
+        .height = static_cast<float>(m_window_extent.height),
+        .minDepth = 0.f,
+        .maxDepth = 1.f};
+
+    pipelineBuilder._scissor = {
+        .offset = {0, 0},
+        .extent = m_window_extent};
+
+    pipelineBuilder._rasterizer = PipelineRasterizationStateCreateInfo(VK_POLYGON_MODE_FILL);
+    pipelineBuilder._multisampling = PipelineMultisampleStateCreateInfo();
+    pipelineBuilder._colorBlendAttachment = PipelineColorBlendAttachmentState();
+    pipelineBuilder._pipelineLayout = m_triangle_pipeline_layout;
+
+    m_triangle_pipeline = pipelineBuilder.BuildPipeline(m_device, m_render_pass);
+
+    vkDestroyShaderModule(m_device, triangleFragShader, nullptr);
+    vkDestroyShaderModule(m_device, triangleVertShader, nullptr);
 }

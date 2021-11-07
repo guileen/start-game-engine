@@ -28,6 +28,7 @@ private:
     void initFramebuffers();
     void initCommandPool();
     void initSyncObjects();
+    void initPipeline();
 
 private:
     // temp frame number
@@ -62,4 +63,8 @@ private:
     VkSemaphore m_present_semaphore;
     VkSemaphore m_render_semaphore;
     VkFence m_render_fence;
+
+    // pipeline
+    VkPipeline m_triangle_pipeline;
+    VkPipelineLayout m_triangle_pipeline_layout;
 };

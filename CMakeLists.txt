@@ -10,7 +10,7 @@ else()
   add_compile_options(-w -fcolor-diagnostics) #Clang
 endif()
 
-add_subdirectory(external/engine)
+add_subdirectory(engine)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 

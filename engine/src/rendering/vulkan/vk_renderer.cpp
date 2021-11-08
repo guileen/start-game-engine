@@ -300,7 +300,7 @@ void VulkanRenderer::initSyncObjects() {
 
 void VulkanRenderer::initPipeline() {
     VkShaderModule triangleFragShader;
-    if (!VulkanUtilities::LoadShaderModule("shaders/triangle.frag.spv", m_device, triangleFragShader)) {
+    if (!VulkanUtilities::LoadShaderModule(ServiceLocator::GetExePath() + "/shaders/triangle.frag.spv", m_device, triangleFragShader)) {
         std::cout << "Failed to load triangle fragment shader module\n";
     }
     else {
@@ -308,7 +308,7 @@ void VulkanRenderer::initPipeline() {
     }
 
     VkShaderModule triangleVertShader;
-    if (!VulkanUtilities::LoadShaderModule("shaders/triangle.vert.spv", m_device, triangleVertShader)) {
+    if (!VulkanUtilities::LoadShaderModule(ServiceLocator::GetExePath() + "/shaders/triangle.vert.spv", m_device, triangleVertShader)) {
         std::cout << "Failed to load triangle vertex shader module\n";
     }
     else {

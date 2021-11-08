@@ -11,6 +11,9 @@ public:
     static inline Renderer* GetRenderer() { return _renderer.get(); }
     static inline InputManager* GetInputManager() { return _inputManager.get(); }
 
+    static inline void SetExePath(std::string path) { _exePath = path; }
+    static inline std::string GetExePath() { return _exePath; }
+
     static inline void Provide(Window* window) {
         if (_window != nullptr) { return; }
         _window = std::unique_ptr<Window>(window);
@@ -41,4 +44,5 @@ private:
     static inline std::unique_ptr<Window> _window = nullptr;
     static inline std::unique_ptr<Renderer> _renderer = nullptr;
     static inline std::unique_ptr<InputManager> _inputManager = nullptr;
+    static inline std::string _exePath;
 };

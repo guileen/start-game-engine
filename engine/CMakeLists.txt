@@ -3,10 +3,10 @@ project(myengine VERSION 0.0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_subdirectory(external/glm)
-add_subdirectory(external/glfw)
-# add_subdirectory(external/SDL)
-add_subdirectory(external/vk-bootstrap)
+add_subdirectory(vendor/glm)
+add_subdirectory(vendor/glfw)
+# add_subdirectory(vendor/SDL)
+add_subdirectory(vendor/vk-bootstrap)
 
 find_package(Vulkan REQUIRED)
 

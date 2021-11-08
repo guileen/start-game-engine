@@ -1,12 +1,12 @@
-[submodule "external/engine/external/glfw"]
-	path = engine/external/glfw
+[submodule "engine/vendor/glfw"]
+	path = engine/vendor/glfw
 	url = https://github.com/glfw/glfw.git
-[submodule "external/engine/glm"]
-	path = engine/external/glm
+[submodule "engine/vendor/glm"]
+	path = engine/vendor/glm
 	url = https://github.com/g-truc/glm.git
-[submodule "external/engine/external/vk-bootstrap"]
-	path = engine/external/vk-bootstrap
+[submodule "engine/vendor/vk-bootstrap"]
+	path = engine/vendor/vk-bootstrap
 	url = https://github.com/charles-lunarg/vk-bootstrap.git
-[submodule "external/engine/external/SDL"]
-	path = engine/external/SDL
+[submodule "engine/vendor/SDL"]
+	path = engine/vendor/SDL
 	url = https://github.com/libsdl-org/SDL.git

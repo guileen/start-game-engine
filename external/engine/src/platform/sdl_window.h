@@ -1,22 +1,22 @@
 #pragma once
-#define GLFW_INCLUDE_VULKAN
 
-#include <GLFW/glfw3.h>
+#ifdef USE_SDL
+
 #include <engine/platform/window.h>
-#include <string>
-#include <input/glfw_input.h>
+#include <SDL.h>
 
-class CustomWindow : public Window {
+class SDLWindow : public Window
+{
 public:
-    CustomWindow() = default;
+    SDLWindow() = default;
     virtual void OpenWindow(WindowData data) override;
     virtual bool Update() override;
+
     virtual std::pair<int, int> GetWindowExtents() override;
     virtual void RequestDrawSurface(std::unordered_map<SurfaceArgs, std::any> args) override;
 
 private:
-    GLFWwindow* _window;
-
-    std::unordered_map<InputKey, InputDeviceState> getGamepadState(int joystickId);
-    MultiplatformInput _input {};
+    SDL_Window *_window = nullptr;
 };
+
+#endif

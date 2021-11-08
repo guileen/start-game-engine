@@ -2,22 +2,12 @@
 #include <iostream>
 #include <engine/service_locator.h>
 
-CustomWindow::CustomWindow() :CustomWindow("My Window", 800, 600) {}
-
-CustomWindow::CustomWindow(std::string title, int width, int height) {
-    std::cout << "Custom Window" << std::endl;
-    _window = nullptr;
-    _title = title;
-    _width = width;
-    _height = height;
-}
-
-void CustomWindow::OpenWindow() {
+void CustomWindow::OpenWindow(WindowData data) {
     std::cout << "OpenWindow" << std::endl;
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-    _window = glfwCreateWindow(_width, _height, _title.c_str(), nullptr, nullptr);
+    _window = glfwCreateWindow(data.width, data.height, data.title.c_str(), nullptr, nullptr);
 
     glfwSetWindowUserPointer(_window, &_input);
     for (int i = 0; i<GLFW_JOYSTICK_LAST; i++) {
@@ -100,16 +90,15 @@ void CustomWindow::OpenWindow() {
     }
 };
 
-void CustomWindow::Update() {
+bool CustomWindow::Update() {
     glfwPollEvents();
-};
-
-bool CustomWindow::ShouldClose() {
     return glfwWindowShouldClose(_window);
 };
 
-std::pair<int, int> CustomWindow::GetSize() {
-    return std::make_pair(_width, _height);
+std::pair<int, int> CustomWindow::GetWindowExtents() {
+    int width, height;
+    glfwGetFramebufferSize(_window, &width, &height);
+    return {width, height};
 }
 
 void CustomWindow::RequestDrawSurface(std::unordered_map<SurfaceArgs, std::any> args)

@@ -188,7 +188,7 @@ void VulkanRenderer::initCore() {
 }
 
 void VulkanRenderer::initSwapchain() {
-    auto [width, height] = ServiceLocator::GetWindow()->GetSize();
+    auto [width, height] = ServiceLocator::GetWindow()->GetWindowExtents();
     m_window_extent.width = width;
     m_window_extent.height = height;
 

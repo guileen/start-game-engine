@@ -2,7 +2,7 @@
 #include <engine/service_locator.h>
 #include "platform/glfw_window.h"
 #include "rendering/vulkan/vk_renderer.h"
-#include "input/glfw_input.h"
+#include "sdl_window.h"
 
 #include <iostream>
 
@@ -18,9 +18,7 @@ void Game::Run() {
     // run the application
     while (m_isRunning)
     {
-        ServiceLocator::GetWindow()->Update();
-        if(ServiceLocator::GetWindow()->ShouldClose())
-        {
+        if (ServiceLocator::GetWindow()->Update()) {
             m_isRunning = false;
             continue;
         }
@@ -43,8 +41,13 @@ void Game::initializeServices() {
     // provide input manager
     ServiceLocator::Provide(new InputManager());
     // provide window
-    ServiceLocator::Provide(new CustomWindow(m_windowTitle, 800, 600));
-    ServiceLocator::GetWindow()->OpenWindow();
+    ServiceLocator::Provide(new CustomWindow());
+    // ServiceLocator::Provide(new SDLWindow());
+    ServiceLocator::GetWindow()->OpenWindow({
+        .title = m_windowTitle,
+        .width = 1280,
+        .height = 720
+    });
     // provide renderer
     RendererSettings settings {
         .ApplicationName = m_windowTitle,
